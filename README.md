@@ -33,7 +33,7 @@ api
 modisa plugin install https://github.com/manyeya/modisa-radar.git
 ```
 
-It starts with the session server; `modisa restart` if a session is already running. Needs [Bun](https://bun.sh) and,
+It starts right away in any running session, and with every session after that. Needs [Bun](https://bun.sh) and,
 for the grouping, `git` on your `PATH`.
 
 `prefix g` is the default key. If it clashes with something of yours, move it in `config.toml`:
