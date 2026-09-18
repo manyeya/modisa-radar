@@ -45,7 +45,7 @@ Then give it the agent list's place, and the room to show tasks, in `~/.config/m
 ```toml
 [sidebar]
 agents = "radar"   # radar's section instead of modisa's own agent list (it's back whenever radar isn't running)
-width = 40         # up to 48 columns, and at most a quarter of your terminal
+width = 40         # or drag the sidebar's edge; up to 48 columns, at most a third of your terminal
 ```
 
 Colours, marks and the agent-list takeover need modisa 0.1.10 or later. On an older modisa radar still works:
