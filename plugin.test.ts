@@ -37,15 +37,21 @@ test("agents show under their repository, worktrees nested, the one that needs y
   await main.to("working");
   await fix.to("blocked");
 
+  const rowOf = async (pane: string) => (await s.ui()).sidebar?.rows.find((r) => r.pane === pane);
   await s.until("the radar to group them", async () => {
     const t = await texts();
-    return t.includes("shop") && t.some((x) => x.startsWith("  ● @main")) && t.includes("  └ shop-fix") && t.some((x) => x.startsWith("    ! @fix"));
+    return t.includes("shop") && t.includes("  └ ⎇ shop-fix") && !!(await rowOf(main.id)) && !!(await rowOf(fix.id));
   });
   const ui = await s.ui();
   expect(ui.sidebar?.title).toBe("1 needs you · 1 working");
+  const rows = ui.sidebar!.rows;
+  const at = (pane: string) => rows.findIndex((r) => r.pane === pane);
+  // blocked first, and the worktree's agent under the worktree
+  expect(at(fix.id)).toBeGreaterThan(rows.findIndex((r) => r.text === "  └ ⎇ shop-fix"));
+  expect(rows[at(main.id)]!.spans).toEqual([{ text: "  " }, { icon: "codex" }, { text: " ⠿ ", tone: "working" }, { text: "@main", tone: "working", bold: true }]);
   const panes = await s.json<any[]>("pane", "list");
-  const fixRow = ui.sidebar!.rows.find((r) => r.text.startsWith("    ! @fix"))!;
-  expect(fixRow).toMatchObject({ pane: fix.id, instance: panes.find((p) => p.id === fix.id).instance, tone: "warn" });
+  expect(rows[at(fix.id)]).toMatchObject({ instance: panes.find((p) => p.id === fix.id).instance });
+  expect(rows[at(fix.id)]!.spans).toContainEqual({ text: " ? ", tone: "blocked" });
 
   const flipped = await s.modisa("plugin", "run", s.plugin, "order");
   expect(JSON.parse(flipped.stdout)).toEqual({ order: "recent" });

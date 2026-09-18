@@ -1,5 +1,6 @@
-// radar: every agent in the session at a glance, in the sidebar. Grouped by the repository it works in (worktrees
-// under their repository), the one that needs you on top, idle ones fading with age. Read AGENTS.md before changing it.
+// radar: every agent in the session at a glance, in the sidebar: its mark, its state and the task it's on, grouped by
+// the repository it works in (worktrees under their repository), the one that needs you on top, idle ones fading.
+// Read AGENTS.md before changing it.
 import { runPlugin, type Pane } from "./modisa-plugin";
 import { layout, title, type Agent, type Order } from "./radar";
 
@@ -30,8 +31,8 @@ runPlugin(async (modisa) => {
     const agents: Agent[] = await Promise.all(panes.map(async (p) => {
       const { project, worktree } = await where(p.cwd);
       return {
-        pane: p.id, instance: p.instance, label: p.name ? `@${p.name}` : p.title || p.id,
-        harness: p.agent!.harness, state: p.agent!.state, since: since.get(p.instance) ?? Date.now(), project, ...(worktree && { worktree }),
+        pane: p.id, instance: p.instance, ...(p.name && { name: p.name }), harness: p.agent!.harness, title: p.terminalTitle ?? p.title ?? "",
+        state: p.agent!.state, since: since.get(p.instance) ?? Date.now(), project, ...(worktree && { worktree }),
       };
     }));
     for (const a of agents) if (!since.has(a.instance)) since.set(a.instance, a.since);
