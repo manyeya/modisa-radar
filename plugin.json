@@ -1,0 +1,11 @@
+{
+  "name": "radar",
+  "protocol": 1,
+  "run": ["bun", "plugin.ts"],
+  "description": "Every agent at a glance in the sidebar: grouped by repository, the one that needs you on top, idle ones fading.",
+  "actions": [
+    { "id": "order", "title": "Radar: switch between grouped and recent order" },
+    { "id": "status", "title": "Radar: status" }
+  ],
+  "keys": [{ "key": "g", "action": "order", "description": "radar: grouped / recent order" }]
+}
